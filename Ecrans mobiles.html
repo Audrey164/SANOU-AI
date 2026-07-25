@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>SANOU AI — Maquettes haute-fidélité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#181B4D;
+  --night-2:#262B72;
+  --night-3:#3A3F94;
+  --gold:#EFA23D;
+  --gold-deep:#D6862A;
+  --clay:#D8582F;
+  --teal:#0E9488;
+  --success:#1FAA59;
+  --error:#E5484D;
+  --paper:#FAF8F3;
+  --paper-2:#F2EEE3;
+  --surface:#FFFFFF;
+  --ink:#15142B;
+  --ink-soft:#5A5A72;
+  --line:#E7E3D6;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(21,20,43,.06),0 1px 1px rgba(21,20,43,.04);
+  --shadow-md:0 8px 24px rgba(21,20,43,.10);
+  --shadow-lg:0 20px 50px rgba(21,20,43,.18);
+  --font-display:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  background:#0F0E28;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== APP SHELL (this wrapper, not one of the SANOU screens) ===== */
+.shell{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  min-height:100vh;
+}
+.rail{
+  background:linear-gradient(180deg,#151340,#0F0E28 60%);
+  color:#E9E7FB;
+  padding:28px 20px 20px;
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.rail-brand{
+  display:flex; align-items:center; gap:10px; margin-bottom:6px;
+}
+.rail-brand .mark{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--clay));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;color:#1B1330;font-size:16px;
+}
+.rail-brand .name{font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:.2px;}
+.rail-sub{font-size:11.5px;color:#9C98C9;margin:2px 0 26px;padding-left:44px;}
+.rail-group{margin-bottom:22px;}
+.rail-group h4{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:#7A76AE;margin:0 0 8px 10px;font-weight:600;
+}
+.rail-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:9px;cursor:pointer;
+  font-size:13.5px;color:#C9C6E8;margin-bottom:2px;
+  border:1px solid transparent;
+  transition:background .15s;
+}
+.rail-item:hover{background:rgba(255,255,255,.05);}
+.rail-item.active{
+  background:rgba(239,162,61,.12);
+  color:#FDEBC9;
+  border-color:rgba(239,162,61,.35);
+}
+.rail-item .dot{width:6px;height:6px;border-radius:50%;background:#5C58A0;flex-shrink:0;}
+.rail-item.active .dot{background:var(--gold);}
+.rail-tag{
+  margin-left:auto;font-size:9.5px;padding:2px 6px;border-radius:5px;
+  background:rgba(255,255,255,.08);color:#B7B4DC;font-family:var(--font-mono);
+}
+
+.stage{
+  padding:36px 44px 80px;
+  overflow-x:auto;
+}
+.stage-header{max-width:1160px;margin:0 auto 22px;color:#EFEDFB;}
+.stage-header .eyebrow{
+  font-family:var(--font-mono);font-size:11px;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;
+}
+.stage-header h1{
+  font-family:var(--font-display);font-size:26px;margin:0 0 8px;color:#fff;
+}
+.stage-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:#B7B4DC;}
+.stage-meta b{color:#DCD9F5;font-weight:600;}
+
+/* Device frames */
+.frame-browser{
+  max-width:1160px;margin:0 auto;border-radius:16px;overflow:hidden;
+  box-shadow:var(--shadow-lg); background:var(--paper);
+}
+.frame-browser .chrome{
+  background:#E7E4D8;padding:10px 14px;display:flex;align-items:center;gap:8px;
+}
+.frame-browser .chrome .dots{display:flex;gap:6px;}
+.frame-browser .chrome .dots span{width:10px;height:10px;border-radius:50%;background:#CFCABA;}
+.frame-browser .chrome .urlbar{
+  flex:1;margin-left:10px;background:#fff;border-radius:7px;padding:5px 12px;
+  font-size:11.5px;color:#8A8672;font-family:var(--font-mono);
+}
+.frame-phone{
+  width:390px;margin:0 auto;border-radius:44px;background:#0E0D22;padding:14px;
+  box-shadow:var(--shadow-lg);
+}
+.frame-phone .notch{
+  width:120px;height:24px;background:#0E0D22;border-radius:0 0 16px 16px;
+  margin:0 auto;position:relative;top:14px;z-index:5;
+}
+.frame-phone .phone-screen{
+  background:var(--paper);border-radius:32px;overflow:hidden;
+  height:844px;
+}
+
+/* screens container */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ============ shared UI kit ============ */
+.btn{
+  font-family:var(--font-body);font-weight:600;font-size:13.5px;
+  padding:10px 18px;border-radius:10px;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{background:var(--night-2);color:#fff;}
+.btn-gold{background:var(--gold);color:#241A05;}
+.btn-ghost{background:transparent;color:var(--night-2);border:1px solid var(--line);}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px;}
+.chip{
+  font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.chip-success{background:#E4F7EA;color:var(--success);}
+.chip-warn{background:#FDF1DD;color:var(--gold-deep);}
+.chip-error{background:#FBE7E7;color:var(--error);}
+.chip-info{background:#E7EEFB;color:var(--night-3);}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);
+}
+.kicker{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+.avatar{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:13px;color:#fff;flex-shrink:0;
+}
+.pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--gold);position:relative;flex-shrink:0;
+}
+.pulse::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--gold);
+  opacity:.5;animation:pulse 1.8s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(.6);opacity:.6;}100%{transform:scale(1.8);opacity:0;}}
+
+/* ===================================================================
+   1. PAGE D'ACCUEIL MARKETING
+=================================================================== */
+.mkt-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 48px;border-bottom:1px solid var(--line);background:var(--paper);
+}
+.mkt-nav .logo{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--night);}
+.mkt-nav .logo .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--clay));}
+.mkt-nav .links{display:flex;gap:30px;font-size:13.5px;color:var(--ink-soft);font-weight:500;}
+.mkt-hero{
+  padding:64px 48px 40px;text-align:center;background:
+  radial-gradient(ellipse at 50% 0%, #F4E7CE 0%, var(--paper) 60%);
+}
+.mkt-hero .eyebrow{
+  display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);
+  padding:6px 14px;border-radius:99px;font-size:12px;color:var(--night-2);font-weight:600;margin-bottom:22px;
+}
+.mkt-hero h1{
+  font-family:var(--font-display);font-size:44px;line-height:1.12;margin:0 0 18px;color:var(--night);
+  max-width:760px;margin-left:auto;margin-right:auto;
+}
+.mkt-hero h1 em{font-style:normal;color:var(--clay);}
+.mkt-hero p{font-size:16px;color:var(--ink-soft);max-width:520px;margin:0 auto 30px;line-height:1.6;}
+.mkt-hero .cta-row{display:flex;gap:12px;justify-content:center;margin-bottom:14px;}
+.mkt-hero .fineprint{font-size:11.5px;color:#9A9584;}
+.kente{
+  height:10px;margin:0 auto 0;max-width:1160px;
+  background:repeating-linear-gradient(90deg,var(--gold) 0 26px,var(--clay) 26px 40px,var(--night-3) 40px 58px,var(--teal) 58px 70px);
+  border-radius:0 0 6px 6px;
+}
+.mkt-demo{
+  max-width:760px;margin:36px auto 0;background:#15142B;border-radius:18px;padding:20px;box-shadow:var(--shadow-lg);
+}
+.mkt-demo .bar{display:flex;gap:6px;margin-bottom:14px;}
+.mkt-demo .bar span{width:9px;height:9px;border-radius:50%;background:#38366A;}
+.demo-bubble{max-width:78%;padding:11px 14px;border-radius:14px;font-size:13px;margin-bottom:10px;line-height:1.45;}
+.demo-bubble.client{background:#22214A;color:#D8D6F2;border-bottom-left-radius:4px;}
+.demo-bubble.ai{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#241A05;margin-left:auto;border-bottom-right-radius:4px;font-weight:500;}
+.mkt-band{padding:56px 48px;background:var(--surface);}
+.mkt-band h2{font-family:var(--font-display);font-size:26px;text-align:center;margin:0 0 8px;color:var(--night);}
+.mkt-band .sub{text-align:center;color:var(--ink-soft);font-size:14px;margin-bottom:36px;}
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto;}
+.mkt-feat{padding:22px;border:1px solid var(--line);border-radius:14px;}
+.mkt-feat .ico{width:38px;height:38px;border-radius:10px;background:var(--paper-2);display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.mkt-feat h4{font-family:var(--font-display);font-size:15px;margin:0 0 6px;}
+.mkt-feat p{font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.5;}
+.mkt-testi{background:var(--night);padding:56px 48px;}
+.mkt-testi .card{background:#22206B;border:none;color:#fff;padding:26px;max-width:640px;margin:0 auto;}
+.mkt-testi p{font-size:15px;line-height:1.6;font-style:italic;color:#E5E3FA;margin:0 0 16px;}
+.mkt-testi .who{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#B7B4DC;}
+.mkt-pricing{padding:56px 48px;background:var(--paper);}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:920px;margin:0 auto;}
+.price-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;}
+.price-card.reco{border:2px solid var(--gold);box-shadow:var(--shadow-md);position:relative;}
+.price-card .badge{position:absolute;top:-11px;left:20px;background:var(--gold);color:#241A05;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:99px;}
+.price-card h4{font-family:var(--font-display);font-size:14px;color:var(--ink-soft);margin:0 0 4px;}
+.price-card .amount{font-family:var(--font-display);font-size:30px;color:var(--night);margin-bottom:14px;}
+.price-card .amount span{font-size:13px;color:var(--ink-soft);font-weight:400;}
+.price-card ul{list-style:none;padding:0;margin:0 0 18px;font-size:12.5px;color:var(--ink-soft);}
+.price-card li{padding:6px 0;border-top:1px solid var(--paper-2);}
+
+/* ===================================================================
+   2. ONBOARDING
+=================================================================== */
+.onb-wrap{background:var(--paper);min-height:640px;padding:0;}
+.onb-top{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--line);}
+.onb-steps{display:flex;gap:8px;}
+.onb-steps .seg{width:46px;height:4px;border-radius:99px;background:var(--paper-2);}
+.onb-steps .seg.done{background:var(--gold);}
+.onb-body{max-width:560px;margin:0 auto;padding:56px 20px 40px;text-align:center;}
+.onb-body .kicker{margin-bottom:10px;}
+.onb-body h2{font-family:var(--font-display);font-size:24px;margin:0 0 10px;color:var(--night);}
+.onb-body p.desc{color:var(--ink-soft);font-size:13.5px;margin:0 0 32px;}
+.onb-ai-msg{
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  display:flex;gap:12px;text-align:left;margin-bottom:26px;box-shadow:var(--shadow-sm);
+}
+.onb-ai-msg p{margin:0;font-size:13px;color:var(--ink);line-height:1.55;}
+.onb-ai-msg .name{font-weight:700;font-size:12.5px;color:var(--night-2);margin-bottom:3px;}
+.onb-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin-bottom:26px;}
+.onb-opt{border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;font-size:13px;}
+.onb-opt.sel{border-color:var(--gold);background:#FEF7EA;}
+.onb-opt b{display:block;font-size:13.5px;margin-bottom:3px;color:var(--night);}
+.onb-opt span{color:var(--ink-soft);font-size:11.5px;}
+.onb-nav{display:flex;justify-content:space-between;max-width:560px;margin:0 auto;padding:0 20px 40px;}
+
+/* ===================================================================
+   3. DASHBOARD
+=================================================================== */
+.app-shell{display:grid;grid-template-columns:236px 1fr;min-height:760px;background:var(--paper);}
+.app-side{background:var(--night);color:#DCDAF5;padding:22px 14px;}
+.app-side .brand{display:flex;align-items:center;gap:8px;padding:0 8px 22px;font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;}
+.app-side .brand .mark{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--gold),var(--clay));}
+.app-nav a{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;
+  color:#B7B4DC;margin-bottom:2px;font-weight:500;
+}
+.app-nav a.active{background:rgba(239,162,61,.15);color:#FCEBC9;}
+.app-nav .ico{width:16px;height:16px;flex-shrink:0;}
+.app-nav-sec{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#6E6AA5;margin:18px 8px 6px;font-weight:600;}
+.app-main{padding:26px 30px;}
+.app-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.app-topbar h2{font-family:var(--font-display);font-size:20px;margin:0;color:var(--night);}
+.app-topbar .search{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:12.5px;color:#9A9584;width:220px;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi{padding:18px;}
+.kpi .lbl{font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;}
+.kpi .val{font-family:var(--font-display);font-size:24px;color:var(--night);}
+.kpi .delta{font-size:11px;font-weight:600;margin-top:6px;}
+.kpi .delta.up{color:var(--success);}
+.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;}
+.panel{padding:20px;margin-bottom:16px;}
+.panel h3{font-family:var(--font-display);font-size:14.5px;margin:0 0 14px;color:var(--night);}
+.ai-tip{
+  background:linear-gradient(120deg,#221F5C,#332F86);color:#fff;padding:18px 20px;border-radius:14px;
+  display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;
+}
+.ai-tip .glyph{width:36px;height:36px;border-radius:10px;background:rgba(239,162,61,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-tip h4{margin:0 0 4px;font-size:13px;font-family:var(--font-display);color:#FCEBC9;}
+.ai-tip p{margin:0;font-size:12.5px;color:#CFCCEE;line-height:1.5;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;}
+.bar-row .lbl{width:110px;color:var(--ink-soft);flex-shrink:0;}
+.bar-row .track{flex:1;height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden;}
+.bar-row .fill{height:100%;background:linear-gradient(90deg,var(--night-3),var(--gold));border-radius:99px;}
+.bar-row .n{width:34px;text-align:right;color:var(--ink-soft);font-family:var(--font-mono);font-size:11px;}
+.stock-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:1px solid var(--paper-2);font-size:12.5px;}
+.stock-row:first-child{border-top:none;}
+
+/* ===================================================================
+   4. CENTRE DE CONVERSATIONS
+=================================================================== */
+.conv-shell{display:grid;grid-template-columns:236px 300px 1fr 260px;min-height:760px;background:var(--paper);}
+.conv-list{background:#fff;border-right:1px solid var(--line);overflow-y:auto;}
+.conv-list-h{padding:16px 16px 10px;border-bottom:1px solid var(--line);}
+.conv-list-h .tabs{display:flex;gap:6px;margin-top:10px;}
+.conv-list-h .tab{font-size:11px;padding:5px 10px;border-radius:8px;background:var(--paper-2);color:var(--ink-soft);font-weight:600;}
+.conv-list-h .tab.active{background:var(--night-2);color:#fff;}
+.conv-item{padding:12px 16px;border-bottom:1px solid #F1EEE4;display:flex;gap:10px;cursor:pointer;}
+.conv-item.active{background:#FEF7EA;}
+.conv-item .meta{flex:1;min-width:0;}
+.conv-item .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--night);}
+.conv-item .prev{font-size:11.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.conv-item .time{font-size:10px;color:#B0AC9A;}
+.score-badge{font-family:var(--font-mono);font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:600;}
+.conv-thread{background:var(--paper);display:flex;flex-direction:column;border-right:1px solid var(--line);}
+.thread-h{padding:14px 20px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:space-between;}
+.thread-h .who{display:flex;align-items:center;gap:10px;}
+.thread-h .who b{font-size:13.5px;display:block;}
+.thread-h .who span{font-size:11px;color:var(--ink-soft);}
+.mode-toggle{display:flex;background:var(--paper-2);border-radius:9px;padding:3px;font-size:11px;font-weight:600;}
+.mode-toggle span{padding:5px 10px;border-radius:7px;color:var(--ink-soft);}
+.mode-toggle span.active{background:#fff;color:var(--night);box-shadow:var(--shadow-sm);}
+.thread-msgs{flex:1;padding:20px;overflow-y:auto;}
+.msg-row{display:flex;margin-bottom:14px;}
+.msg-row.me{justify-content:flex-end;}
+.msg{max-width:66%;padding:10px 14px;border-radius:13px;font-size:12.5px;line-height:1.5;}
+.msg.client{background:#fff;border:1px solid var(--line);border-bottom-left-radius:3px;}
+.msg.ai{background:var(--night-2);color:#fff;border-bottom-right-radius:3px;}
+.msg .ts{display:block;font-size:9.5px;opacity:.6;margin-top:5px;}
+.thread-suggest{padding:12px 20px;border-top:1px solid var(--line);background:#fff;}
+.thread-suggest .lbl{font-size:10.5px;color:var(--ink-soft);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.suggest-chip{display:inline-block;font-size:11.5px;background:#FEF7EA;color:var(--gold-deep);border:1px solid #F3DDAF;padding:6px 12px;border-radius:9px;margin:0 6px 6px 0;cursor:pointer;}
+.thread-input{padding:14px 20px;border-top:1px solid var(--line);background:#fff;display:flex;gap:10px;align-items:center;}
+.thread-input .field{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:10px 14px;font-size:12.5px;color:#9A9584;}
+.conv-side{background:#fff;padding:20px;}
+.conv-side h4{font-family:var(--font-display);font-size:13px;margin:18px 0 10px;color:var(--night);}
+.conv-side h4:first-child{margin-top:0;}
+.intent-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:var(--ink-soft);}
+
+/* ===================================================================
+   5. PROFIL CLIENT
+=================================================================== */
+.client-shell{display:grid;grid-template-columns:236px 1fr 300px;min-height:760px;background:var(--paper);}
+.client-main{padding:26px 30px;}
+.client-hero{display:flex;gap:16px;align-items:center;margin-bottom:22px;}
+.client-hero .av{width:56px;height:56px;font-size:20px;}
+.client-hero h2{margin:0;font-family:var(--font-display);font-size:19px;color:var(--night);}
+.client-hero .sub{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+.client-tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:20px;font-size:13px;font-weight:600;color:var(--ink-soft);}
+.client-tabs span{padding-bottom:10px;}
+.client-tabs span.active{color:var(--night);border-bottom:2px solid var(--gold);}
+.timeline-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--paper-2);}
+.timeline-item:first-child{border-top:none;}
+.timeline-item .ico{width:28px;height:28px;border-radius:8px;background:var(--paper-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.timeline-item .t{font-size:12.5px;color:var(--night);font-weight:600;}
+.timeline-item .d{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+.client-aside{background:#fff;border-left:1px solid var(--line);padding:22px;}
+.meter{margin-bottom:16px;}
+.meter .lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;color:var(--ink-soft);}
+.meter .track{height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden;}
+.meter .fill{height:100%;border-radius:99px;}
+.prod-mini{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--paper-2);}
+.prod-mini:first-child{border-top:none;}
+.prod-mini .thumb{width:34px;height:34px;border-radius:8px;background:var(--paper-2);flex-shrink:0;}
+.prod-mini .info b{display:block;font-size:12px;}
+.prod-mini .info span{font-size:11px;color:var(--ink-soft);}
+
+/* ===================================================================
+   6. CATALOGUE PRODUITS
+=================================================================== */
+.cat-main{padding:26px 30px;}
+.cat-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px;}
+.cat-filters{display:flex;gap:8px;}
+.filter-chip{font-size:12px;padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);font-weight:500;}
+.filter-chip.active{background:var(--night-2);color:#fff;border-color:var(--night-2);}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.prod-card{overflow:hidden;}
+.prod-card .img{height:110px;background:linear-gradient(135deg,#EFE6D2,#E1D3AE);position:relative;}
+.prod-card .img .stockflag{position:absolute;top:8px;left:8px;}
+.prod-card .body{padding:12px 14px;}
+.prod-card .name{font-size:12.5px;font-weight:600;color:var(--night);margin-bottom:3px;}
+.prod-card .price{font-family:var(--font-mono);font-size:13px;color:var(--gold-deep);font-weight:600;}
+.prod-card .stats{display:flex;justify-content:space-between;margin-top:8px;font-size:10.5px;color:var(--ink-soft);}
+
+/* ===================================================================
+   7. CENTRE IA — AGENTS
+=================================================================== */
+.agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.agent-card{padding:20px;}
+.agent-card .head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.agent-card .glyph{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.agent-card h4{font-family:var(--font-display);font-size:14.5px;margin:0 0 4px;color:var(--night);}
+.agent-card .desc{font-size:11.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5;}
+.agent-stat{display:flex;justify-content:space-between;font-size:11.5px;padding:6px 0;border-top:1px solid var(--paper-2);color:var(--ink-soft);}
+.agent-log{margin-top:12px;background:var(--paper);border-radius:9px;padding:10px 12px;font-size:11px;color:var(--ink-soft);font-family:var(--font-mono);line-height:1.6;}
+
+/* ===================================================================
+   8. MOBILE VENDEUR
+   — même système de composants que le web : var(--night)/var(--gold),
+     Sora/Inter/Plex Mono, mêmes chips, mêmes cartes, même marque —
+=================================================================== */
+.phone-screen{display:flex;flex-direction:column;height:100%;background:var(--paper);}
+
+/* marque persistante — équivalent mobile du .brand de la sidebar web */
+.mob-brand{display:flex;align-items:center;gap:8px;padding-bottom:8px;}
+.mob-brand .mark{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--gold),var(--clay));flex-shrink:0;}
+.mob-brand span{font-family:var(--font-display);font-weight:700;font-size:12.5px;color:#fff;letter-spacing:.02em;}
+
+.mob-top{padding:6px 18px 14px;background:var(--night);color:#fff;}
+.mob-top .greet{font-size:11.5px;color:#B7B4DC;}
+.mob-top h3{margin:2px 0 0;font-family:var(--font-display);font-size:18px;}
+.mob-kpis{display:flex;gap:10px;padding:14px 18px;}
+.mob-kpi{flex:1;background:#fff;border-radius:12px;padding:12px;text-align:center;box-shadow:var(--shadow-sm);}
+.mob-kpi .v{font-family:var(--font-display);font-size:17px;color:var(--night);}
+.mob-kpi .l{font-size:9.5px;color:var(--ink-soft);margin-top:2px;}
+.mob-sec-h{display:flex;justify-content:space-between;padding:6px 18px 10px;margin-top:6px;}
+.mob-sec-h h4{font-size:13px;font-family:var(--font-display);margin:0;color:var(--night);}
+.mob-sec-h span{font-size:11px;color:var(--gold-deep);font-weight:600;}
+.mob-conv{display:flex;gap:10px;padding:10px 18px;align-items:center;}
+.mob-conv .info{flex:1;min-width:0;}
+.mob-conv .info b{font-size:12.5px;display:block;}
+.mob-conv .info span{font-size:11px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+.mob-tabbar{
+  margin-top:auto;display:flex;justify-content:space-around;padding:10px 0 18px;
+  border-top:1px solid var(--line);background:#fff;
+}
+.mob-tabbar .t{text-align:center;font-size:9.5px;color:var(--ink-soft);}
+.mob-tabbar .t.active{color:var(--gold-deep);font-weight:700;}
+.mob-tabbar .t .ic{width:20px;height:20px;margin:0 auto 3px;border-radius:6px;background:var(--paper-2);}
+.mob-tabbar .t.active .ic{background:var(--gold);}
+
+/* mobile — shared sub-header : même bandeau marine que la sidebar/topbar web */
+.mob-head{padding:6px 18px 14px;background:var(--night);}
+.mob-head h3{margin:8px 0 0;font-family:var(--font-display);font-size:17px;color:#fff;}
+.mob-head .search{margin-top:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;font-size:12px;color:#B7B4DC;}
+.mob-head .tabs{display:flex;gap:6px;margin-top:10px;}
+.mob-head .tabs span{font-size:11px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.08);color:#C9C6E8;font-weight:600;}
+.mob-head .tabs span.active{background:var(--gold);color:#241A05;}
+.mob-body{flex:1;overflow-y:auto;background:var(--paper);}
+
+/* mobile — conversation list rows */
+.mob-conv2{display:flex;gap:10px;padding:12px 18px;align-items:center;background:#fff;border-bottom:1px solid var(--paper-2);}
+.mob-conv2 .info{flex:1;min-width:0;}
+.mob-conv2 .info .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--night);}
+.mob-conv2 .info .top span{font-size:10px;color:#B0AC9A;font-weight:500;}
+.mob-conv2 .info .prev{font-size:11.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+
+/* mobile — chat thread */
+.mob-chat-h{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--night);color:#fff;}
+.mob-chat-h b{font-size:13.5px;display:block;}
+.mob-chat-h span{font-size:10.5px;color:#B7B4DC;}
+.mob-chat-h .back{font-size:16px;margin-right:2px;}
+.mob-msgs{flex:1;padding:16px;overflow-y:auto;background:var(--paper);}
+.mob-msg-row{display:flex;margin-bottom:12px;}
+.mob-msg-row.me{justify-content:flex-end;}
+.mob-msg{max-width:76%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.5;}
+.mob-msg.client{background:#fff;border:1px solid var(--line);border-bottom-left-radius:3px;}
+.mob-msg.ai{background:var(--night-2);color:#fff;border-bottom-right-radius:3px;}
+.mob-suggest{padding:10px 16px;background:#fff;border-top:1px solid var(--line);}
+.mob-suggest .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);font-weight:700;margin-bottom:7px;}
+.mob-input-bar{display:flex;gap:8px;align-items:center;padding:10px 16px 16px;background:#fff;}
+.mob-input-bar .field{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:9px 13px;font-size:12px;color:#9A9584;}
+.mob-input-bar .send{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#241A05;font-weight:700;}
+
+/* mobile — client list */
+.mob-client-row{display:flex;gap:10px;padding:12px 18px;align-items:center;background:#fff;border-bottom:1px solid var(--paper-2);}
+.mob-client-row .info{flex:1;}
+.mob-client-row .info b{font-size:12.5px;display:block;}
+.mob-client-row .info span{font-size:11px;color:var(--ink-soft);}
+.mob-client-row .meter-mini{width:44px;height:5px;border-radius:99px;background:var(--paper-2);margin-top:5px;overflow:hidden;}
+.mob-client-row .meter-mini i{display:block;height:100%;background:var(--success);}
+
+/* mobile — sales */
+.mob-sales-hero{padding:20px 18px;background:linear-gradient(120deg,#221F5C,#332F86);color:#fff;}
+.mob-sales-hero .lbl{font-size:11px;color:#B7B4DC;}
+.mob-sales-hero .val{font-family:var(--font-display);font-size:26px;margin:4px 0;color:#fff;}
+.mob-sales-hero .delta{font-size:11.5px;color:#9BE4B4;font-weight:600;}
+.mob-sale-row{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:#fff;border-bottom:1px solid var(--paper-2);}
+.mob-sale-row .p{font-size:12.5px;font-weight:600;color:var(--night);}
+.mob-sale-row .d{font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+.mob-sale-row .amt{font-family:var(--font-mono);font-size:12.5px;color:var(--success);font-weight:600;}
+
+/* mobile — menu "Plus" : reprend exactement les entrées de la sidebar web,
+   pour garantir la parité de navigation entre web et mobile */
+.mob-menu-sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:700;padding:16px 18px 8px;}
+.mob-menu-row{display:flex;align-items:center;gap:12px;padding:13px 18px;background:#fff;border-bottom:1px solid var(--paper-2);font-size:13px;color:var(--night);font-weight:500;}
+.mob-menu-row .ico{width:30px;height:30px;border-radius:9px;background:var(--paper-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+.mob-menu-row .chev{margin-left:auto;color:#C7C3B2;}
+.mob-menu-profile{display:flex;align-items:center;gap:12px;padding:16px 18px;background:#fff;border-bottom:1px solid var(--paper-2);}
+.mob-menu-profile b{display:block;font-size:13.5px;}
+.mob-menu-profile span{font-size:11px;color:var(--ink-soft);}
+
+/* mobile — notifications */
+.mob-notif{display:flex;gap:12px;padding:13px 18px;background:#fff;border-bottom:1px solid var(--paper-2);}
+.mob-notif .ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+.mob-notif .body b{font-size:12.5px;display:block;color:var(--night);}
+.mob-notif .body span{font-size:11px;color:var(--ink-soft);line-height:1.4;display:block;margin-top:2px;}
+.mob-notif .time{font-size:10px;color:#B0AC9A;margin-left:auto;flex-shrink:0;}
+.mob-notif.unread{background:#FEFAF1;}
+
+/* icon helper */
+.svgi{width:100%;height:100%;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- ============ NAVIGATION RAIL (outil de navigation entre maquettes) ============ -->
+  <nav class="rail">
+    <div class="rail-brand"><div class="mark">S</div><div class="name">SANOU AI</div></div>
+    <div class="rail-sub">Maquettes haute-fidélité</div>
+
+    <div class="rail-group">
+      <h4>Marketing &amp; Onboarding</h4>
+      <div class="rail-item active" data-screen="s1"><span class="dot"></span>Accueil marketing<span class="rail-tag">web</span></div>
+      <div class="rail-item" data-screen="s2"><span class="dot"></span>Onboarding IA<span class="rail-tag">web</span></div>
+    </div>
+    <div class="rail-group">
+      <h4>Cœur produit</h4>
+      <div class="rail-item" data-screen="s3"><span class="dot"></span>Tableau de bord<span class="rail-tag">web</span></div>
+      <div class="rail-item" data-screen="s4"><span class="dot"></span>Centre de conversations<span class="rail-tag">web</span></div>
+      <div class="rail-item" data-screen="s5"><span class="dot"></span>Profil client intelligent<span class="rail-tag">web</span></div>
+      <div class="rail-item" data-screen="s6"><span class="dot"></span>Catalogue produits<span class="rail-tag">web</span></div>
+      <div class="rail-item" data-screen="s7"><span class="dot"></span>Centre IA — Agents<span class="rail-tag">web</span></div>
+    </div>
+    <div class="rail-group">
+      <h4>Mobile — App vendeur</h4>
+      <div class="rail-item" data-screen="s8"><span class="dot"></span>Accueil<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s9"><span class="dot"></span>Conversations<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s10"><span class="dot"></span>Fil de discussion<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s11"><span class="dot"></span>Clients<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s12"><span class="dot"></span>Ventes<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s13"><span class="dot"></span>Notifications<span class="rail-tag">mobile</span></div>
+      <div class="rail-item" data-screen="s14"><span class="dot"></span>Menu "Plus"<span class="rail-tag">mobile</span></div>
+    </div>
+  </nav>
+
+  <!-- ============ STAGE ============ -->
+  <main class="stage">
+
+    <!-- SCREEN 1 : ACCUEIL MARKETING -->
+    <section class="screen active" id="s1">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 01 · Marketing</div>
+        <h1>Page d'accueil marketing</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> visiteur, prospect</span><span><b>Objectif :</b> transformer un visiteur en compte créé</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">sanou.ai</div></div>
+        <div>
+          <div class="mkt-nav">
+            <div class="logo"><div class="mark"></div>SANOU AI</div>
+            <div class="links"><span>Produit</span><span>Tarifs</span><span>Clients</span><span>Ressources</span></div>
+            <div style="display:flex;gap:10px;"><button class="btn btn-ghost btn-sm">Connexion</button><button class="btn btn-gold btn-sm">Essayer gratuitement</button></div>
+          </div>
+          <div class="mkt-hero">
+            <div class="eyebrow">✦ Nouveau — Agent vocal en fon disponible</div>
+            <h1>Votre meilleur vendeur ne <em>dort jamais.</em></h1>
+            <p>SANOU AI comprend vos clients, répond, conseille et vend à votre place — sur WhatsApp, Instagram et votre site, 24h/24.</p>
+            <div class="cta-row">
+              <button class="btn btn-gold">Créer mon assistant IA</button>
+              <button class="btn btn-ghost">Voir une démo</button>
+            </div>
+            <div class="fineprint">Aucune carte bancaire requise · Configuration en 10 minutes</div>
+            <div class="mkt-demo">
+              <div class="bar"><span></span><span></span><span></span></div>
+              <div class="demo-bubble client">Bonjour, vous avez des pagnes wax pour un mariage ? Budget max 25 000 F</div>
+              <div class="demo-bubble ai">Bonjour Aïcha 👋 Oui ! Je vous propose 3 modèles à moins de 25 000 F, dont un très demandé cette semaine. Je vous envoie les photos ?</div>
+            </div>
+          </div>
+          <div class="kente"></div>
+          <div class="mkt-band">
+            <h2>Un employé commercial complet</h2>
+            <div class="sub">Pas un chatbot. Une intelligence commerciale entraînée sur votre activité.</div>
+            <div class="mkt-grid">
+              <div class="mkt-feat"><div class="ico">💬</div><h4>Vend automatiquement</h4><p>Répond, conseille et conclut la vente sans intervention humaine.</p></div>
+              <div class="mkt-feat"><div class="ico">📈</div><h4>Analyse chaque client</h4><p>Détecte le budget, l'intention d'achat et le meilleur moment pour relancer.</p></div>
+              <div class="mkt-feat"><div class="ico">🗣️</div><h4>Parle fon, français, anglais</h4><p>Comprend le texte, la voix et les photos envoyées par vos clients.</p></div>
+            </div>
+          </div>
+          <div class="mkt-testi">
+            <div class="card">
+              <p>"Depuis SANOU AI, je réponds à mes clientes même quand je suis au marché. Mes ventes WhatsApp ont doublé en 6 semaines."</p>
+              <div class="who"><div class="avatar" style="background:var(--gold-deep);">RB</div>Rafiatou B. — Boutique Wax Elegance, Cotonou</div>
+            </div>
+          </div>
+          <div class="mkt-pricing">
+            <h2>Des offres simples</h2>
+            <div class="sub">Payez selon la taille de votre commerce</div>
+            <div class="price-grid">
+              <div class="price-card"><h4>Essentiel</h4><div class="amount">15 000 F<span>/mois</span></div><ul><li>1 canal (WhatsApp)</li><li>500 conversations IA</li><li>Catalogue jusqu'à 100 produits</li></ul><button class="btn btn-ghost" style="width:100%;">Choisir</button></div>
+              <div class="price-card reco"><div class="badge">Populaire</div><h4>Croissance</h4><div class="amount">45 000 F<span>/mois</span></div><ul><li>Tous les canaux</li><li>Conversations illimitées</li><li>Agent vocal + vision</li></ul><button class="btn btn-gold" style="width:100%;">Choisir</button></div>
+              <div class="price-card"><h4>Entreprise</h4><div class="amount">Sur devis</div><ul><li>Multi-boutiques</li><li>API &amp; intégrations</li><li>Accompagnement dédié</li></ul><button class="btn btn-ghost" style="width:100%;">Nous contacter</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2 : ONBOARDING -->
+    <section class="screen" id="s2">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 03 · Onboarding intelligent</div>
+        <h1>Configuration guidée par l'IA</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> propriétaire d'entreprise</span><span><b>Objectif :</b> configurer entreprise, catalogue, ton, règles en &lt; 10 min</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/onboarding</div></div>
+        <div class="onb-wrap">
+          <div class="onb-top">
+            <div class="logo" style="font-size:14px;"><div class="mark" style="width:22px;height:22px;"></div></div>
+            <div class="onb-steps"><div class="seg done"></div><div class="seg done"></div><div class="seg done"></div><div class="seg"></div><div class="seg"></div></div>
+            <button class="btn btn-ghost btn-sm">Passer</button>
+          </div>
+          <div class="onb-body">
+            <div class="kicker">Étape 3 sur 5 — Ton de communication</div>
+            <h2>Comment SANOU doit-il parler à vos clients ?</h2>
+            <p class="desc">Cela définit le style des réponses automatiques de votre assistant.</p>
+            <div class="onb-ai-msg">
+              <div class="pulse" style="margin-top:5px;"></div>
+              <div><div class="name">SANOU · votre assistant</div><p>J'ai analysé votre secteur (mode &amp; textile). Je recommande un ton "chaleureux et proche", adapté à la vente entre particuliers sur WhatsApp.</p></div>
+            </div>
+            <div class="onb-options">
+              <div class="onb-opt sel"><b>Chaleureux &amp; proche</b><span>Tutoiement possible, emojis, ton amical</span></div>
+              <div class="onb-opt"><b>Professionnel</b><span>Vouvoiement, formulations précises</span></div>
+              <div class="onb-opt"><b>Direct &amp; efficace</b><span>Réponses courtes, orienté action</span></div>
+              <div class="onb-opt"><b>Personnalisé</b><span>Décrire le ton avec vos mots</span></div>
+            </div>
+          </div>
+          <div class="onb-nav"><button class="btn btn-ghost">Retour</button><button class="btn btn-gold">Continuer →</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 : DASHBOARD -->
+    <section class="screen" id="s3">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 04 · Cœur produit</div>
+        <h1>Tableau de bord principal</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> propriétaire, responsable commercial</span><span><b>Quand :</b> à la connexion, vue par défaut</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/dashboard</div></div>
+        <div class="app-shell">
+          <aside class="app-side">
+            <div class="brand"><div class="mark"></div>SANOU AI</div>
+            <div class="app-nav">
+              <a class="active">📊 Tableau de bord</a>
+              <a>💬 Conversations <span class="rail-tag" style="margin-left:auto;background:var(--gold);color:#241A05;">12</span></a>
+              <a>👤 Clients</a>
+              <a>🛍️ Catalogue</a>
+              <a>📦 Stock</a>
+              <div class="app-nav-sec">Intelligence</div>
+              <a>🤖 Centre IA</a>
+              <a>📣 IA Marketing</a>
+              <a>📈 Analytics</a>
+              <div class="app-nav-sec">Compte</div>
+              <a>⚙️ Paramètres</a>
+              <a>🔌 Intégrations</a>
+            </div>
+          </aside>
+          <div class="app-main">
+            <div class="app-topbar">
+              <h2>Bonjour, Rafiatou 👋</h2>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <div class="search">🔍 Rechercher…</div>
+                <div class="avatar" style="background:var(--night-3);">RB</div>
+              </div>
+            </div>
+            <div class="ai-tip">
+              <div class="glyph">💡</div>
+              <div><h4>Votre assistant IA vous conseille aujourd'hui</h4><p>3 clientes intéressées par le pagne "Ankara Bleu" n'ont pas reçu de relance depuis 2 jours. Je peux leur envoyer une offre -10% maintenant.</p></div>
+              <button class="btn btn-gold btn-sm" style="margin-left:auto;flex-shrink:0;">Envoyer</button>
+            </div>
+            <div class="kpi-row">
+              <div class="card kpi"><div class="lbl">Ventes générées par l'IA</div><div class="val">1 284 500 F</div><div class="delta up">▲ 18% vs semaine dernière</div></div>
+              <div class="card kpi"><div class="lbl">Conversations actives</div><div class="val">47</div><div class="delta up">▲ 6</div></div>
+              <div class="card kpi"><div class="lbl">Clients intéressés</div><div class="val">132</div><div class="delta up">▲ 12%</div></div>
+              <div class="card kpi"><div class="lbl">Taux de conversion</div><div class="val">24,6%</div><div class="delta up">▲ 3,1 pts</div></div>
+            </div>
+            <div class="dash-grid">
+              <div>
+                <div class="card panel">
+                  <h3>Produits populaires cette semaine</h3>
+                  <div class="bar-row"><span class="lbl">Pagne Ankara Bleu</span><div class="track"><div class="fill" style="width:88%;"></div></div><span class="n">88%</span></div>
+                  <div class="bar-row"><span class="lbl">Robe Wax Reine</span><div class="track"><div class="fill" style="width:71%;"></div></div><span class="n">71%</span></div>
+                  <div class="bar-row"><span class="lbl">Sac tissé Bogolan</span><div class="track"><div class="fill" style="width:54%;"></div></div><span class="n">54%</span></div>
+                  <div class="bar-row"><span class="lbl">Ensemble enfant</span><div class="track"><div class="fill" style="width:39%;"></div></div><span class="n">39%</span></div>
+                </div>
+                <div class="card panel">
+                  <h3>Conversations par canal (7 jours)</h3>
+                  <svg viewBox="0 0 460 120" style="width:100%;height:120px;">
+                    <polyline points="0,90 60,70 120,75 180,50 240,55 300,30 360,38 420,15" fill="none" stroke="#EFA23D" stroke-width="3"/>
+                    <polyline points="0,105 60,100 120,95 180,98 240,85 300,88 360,80 420,78" fill="none" stroke="#3A3F94" stroke-width="3"/>
+                  </svg>
+                  <div style="display:flex;gap:16px;font-size:11px;color:var(--ink-soft);margin-top:6px;">
+                    <span>● WhatsApp</span><span style="color:var(--night-3);">● Instagram</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="card panel">
+                  <h3>Alertes stock</h3>
+                  <div class="stock-row"><span>Pagne Ankara Bleu</span><span class="chip chip-error">3 restants</span></div>
+                  <div class="stock-row"><span>Robe Wax Reine (Taille M)</span><span class="chip chip-warn">8 restants</span></div>
+                  <div class="stock-row"><span>Sac tissé Bogolan</span><span class="chip chip-success">32 restants</span></div>
+                </div>
+                <div class="card panel">
+                  <h3>Recommandations IA</h3>
+                  <div class="timeline-item"><div class="ico">📢</div><div><div class="t">Relancer 5 paniers abandonnés</div><div class="d">Valeur estimée : 87 000 F</div></div></div>
+                  <div class="timeline-item"><div class="ico">🏷️</div><div><div class="t">Créer une offre sur le Sac Bogolan</div><div class="d">Stock élevé, faible rotation</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4 : CENTRE DE CONVERSATIONS -->
+    <section class="screen" id="s4">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 05 · Cœur produit</div>
+        <h1>Centre de conversations IA</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur, responsable commercial</span><span><b>Objectif :</b> superviser, assister ou reprendre les conversations de l'IA</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/conversations</div></div>
+        <div class="conv-shell">
+          <aside class="app-side">
+            <div class="brand"><div class="mark"></div>SANOU AI</div>
+            <div class="app-nav">
+              <a>📊 Tableau de bord</a>
+              <a class="active">💬 Conversations</a>
+              <a>👤 Clients</a>
+              <a>🛍️ Catalogue</a>
+              <a>🤖 Centre IA</a>
+            </div>
+          </aside>
+          <div class="conv-list">
+            <div class="conv-list-h">
+              <div style="display:flex;justify-content:space-between;align-items:center;"><b style="font-size:14px;">Conversations</b><span class="chip chip-info">47 actives</span></div>
+              <div class="tabs"><span class="tab active">Toutes</span><span class="tab">À reprendre</span><span class="tab">Score élevé</span></div>
+            </div>
+            <div class="conv-item active">
+              <div class="avatar" style="background:var(--clay);">AB</div>
+              <div class="meta"><div class="top">Aïcha B. <span class="time">2 min</span></div><div class="prev">Vous avez des pagnes wax pour un mariage ?</div>
+              <span class="score-badge" style="background:#FDF1DD;color:var(--gold-deep);">SCORE 82</span></div>
+            </div>
+            <div class="conv-item">
+              <div class="avatar" style="background:var(--teal);">MK</div>
+              <div class="meta"><div class="top">Moussa K. <span class="time">14 min</span></div><div class="prev">D'accord, je réfléchis encore un peu</div>
+              <span class="score-badge" style="background:#E7EEFB;color:var(--night-3);">SCORE 41</span></div>
+            </div>
+            <div class="conv-item">
+              <div class="avatar" style="background:var(--success);">FD</div>
+              <div class="meta"><div class="top">Fatima D. <span class="time">1 h</span></div><div class="prev">🎤 Note vocale (0:14)</div>
+              <span class="score-badge" style="background:#E4F7EA;color:var(--success);">SCORE 91</span></div>
+            </div>
+            <div class="conv-item">
+              <div class="avatar" style="background:#8A7FD1;">SO</div>
+              <div class="meta"><div class="top">Serge O. <span class="time">3 h</span></div><div class="prev">📷 a envoyé une photo</div>
+              <span class="score-badge" style="background:var(--paper-2);color:var(--ink-soft);">SCORE 55</span></div>
+            </div>
+          </div>
+          <div class="conv-thread">
+            <div class="thread-h">
+              <div class="who"><div class="avatar" style="background:var(--clay);">AB</div><div><b>Aïcha B.</b><span>WhatsApp · Cliente depuis 3 mois</span></div></div>
+              <div class="mode-toggle"><span class="active">IA seule</span><span>Assisté</span><span>Reprendre</span></div>
+            </div>
+            <div class="thread-msgs">
+              <div class="msg-row"><div class="msg client">Bonjour, vous avez des pagnes wax pour un mariage ? Budget max 25 000 F<span class="ts">10:02</span></div></div>
+              <div class="msg-row me"><div class="msg ai">Bonjour Aïcha 👋 Oui ! J'ai 3 modèles sous 25 000 F. Le "Ankara Bleu Royal" est très demandé pour les mariages en ce moment.<span class="ts">10:02 · IA</span></div></div>
+              <div class="msg-row"><div class="msg client">📷 [photo envoyée]<span class="ts">10:04</span></div></div>
+              <div class="msg-row me"><div class="msg ai">Merci pour la photo ! C'est exactement ce style que nous avons en stock, à 22 000 F. Voulez-vous que je vous réserve une pièce ?<span class="ts">10:04 · IA</span></div></div>
+            </div>
+            <div class="thread-suggest">
+              <div class="lbl">Suggestions IA</div>
+              <span class="suggest-chip">Proposer livraison gratuite</span>
+              <span class="suggest-chip">Envoyer photos supplémentaires</span>
+              <span class="suggest-chip">Confirmer la réservation</span>
+            </div>
+            <div class="thread-input"><div class="field">Écrire un message…</div><button class="btn btn-gold btn-sm">Envoyer</button></div>
+          </div>
+          <div class="conv-side">
+            <h4>Profil client</h4>
+            <div class="intent-row"><span>Budget estimé</span><b>≤ 25 000 F</b></div>
+            <div class="intent-row"><span>Intention d'achat</span><b style="color:var(--success);">Élevée</b></div>
+            <div class="intent-row"><span>Occasion</span><b>Mariage</b></div>
+            <h4>Score d'achat</h4>
+            <svg viewBox="0 0 120 70" style="width:100%;">
+              <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="#F2EEE3" stroke-width="10"/>
+              <path d="M10,60 A50,50 0 0 1 92,25" fill="none" stroke="#EFA23D" stroke-width="10"/>
+            </svg>
+            <div style="text-align:center;font-family:var(--font-display);font-size:20px;color:var(--night);margin-top:-6px;">82 / 100</div>
+            <h4>Historique</h4>
+            <div class="timeline-item"><div class="ico">🛍️</div><div><div class="t">Achat — Robe Wax</div><div class="d">Il y a 2 mois · 18 000 F</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 5 : PROFIL CLIENT -->
+    <section class="screen" id="s5">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 06 · Cœur produit</div>
+        <h1>Profil client intelligent</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur, responsable commercial</span><span><b>Quand :</b> depuis une conversation ou la liste clients</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/clients/aicha-b</div></div>
+        <div class="client-shell">
+          <aside class="app-side">
+            <div class="brand"><div class="mark"></div>SANOU AI</div>
+            <div class="app-nav"><a>📊 Tableau de bord</a><a>💬 Conversations</a><a class="active">👤 Clients</a><a>🛍️ Catalogue</a></div>
+          </aside>
+          <div class="client-main">
+            <div class="client-hero">
+              <div class="avatar av" style="background:var(--clay);">AB</div>
+              <div><h2>Aïcha Boukari</h2><div class="sub">+229 97 •• •• 42 · Cliente depuis mars 2026 · Cotonou</div></div>
+              <div style="margin-left:auto;display:flex;gap:8px;"><button class="btn btn-ghost btn-sm">Voir conversation</button><button class="btn btn-gold btn-sm">Envoyer une offre</button></div>
+            </div>
+            <div class="client-tabs"><span class="active">Aperçu</span><span>Conversations</span><span>Achats</span><span>Préférences</span></div>
+            <div class="card panel">
+              <h3>Historique récent</h3>
+              <div class="timeline-item"><div class="ico">💬</div><div><div class="t">A demandé des pagnes wax pour mariage</div><div class="d">Aujourd'hui, 10:02 · WhatsApp</div></div></div>
+              <div class="timeline-item"><div class="ico">🛍️</div><div><div class="t">Achat — Robe Wax Reine, taille M</div><div class="d">Il y a 2 mois · 18 000 F</div></div></div>
+              <div class="timeline-item"><div class="ico">👁️</div><div><div class="t">A consulté "Sac tissé Bogolan"</div><div class="d">Il y a 2 mois</div></div></div>
+            </div>
+            <div class="card panel">
+              <h3>Produits consultés</h3>
+              <div class="prod-mini"><div class="thumb"></div><div class="info"><b>Pagne Ankara Bleu Royal</b><span>Consulté 3 fois · aujourd'hui</span></div></div>
+              <div class="prod-mini"><div class="thumb"></div><div class="info"><b>Robe Wax Reine</b><span>Achetée · il y a 2 mois</span></div></div>
+            </div>
+          </div>
+          <aside class="client-aside">
+            <h4 style="margin-top:0;font-family:var(--font-display);">Niveau d'intérêt</h4>
+            <div class="meter"><div class="lbl"><span>Probabilité d'achat</span><b>82%</b></div><div class="track"><div class="fill" style="width:82%;background:var(--success);"></div></div></div>
+            <div class="meter"><div class="lbl"><span>Sensibilité prix</span><b>Moyenne</b></div><div class="track"><div class="fill" style="width:55%;background:var(--gold);"></div></div></div>
+            <h4 style="font-family:var(--font-display);">Budget estimé</h4>
+            <div style="font-family:var(--font-display);font-size:20px;color:var(--night);">15 000 – 25 000 F</div>
+            <h4 style="font-family:var(--font-display);">Recommandations IA</h4>
+            <div class="card" style="padding:12px;font-size:12px;color:var(--ink-soft);line-height:1.5;">Proposer le pagne "Ankara Bleu Royal" avec livraison offerte — forte probabilité de conversion sous 48h.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 6 : CATALOGUE -->
+    <section class="screen" id="s6">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 07 · Cœur produit</div>
+        <h1>Catalogue produits intelligent</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> propriétaire, responsable commercial</span><span><b>Objectif :</b> gérer les produits que l'IA peut vendre</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/catalogue</div></div>
+        <div class="app-shell">
+          <aside class="app-side">
+            <div class="brand"><div class="mark"></div>SANOU AI</div>
+            <div class="app-nav"><a>📊 Tableau de bord</a><a>💬 Conversations</a><a>👤 Clients</a><a class="active">🛍️ Catalogue</a><a>📦 Stock</a></div>
+          </aside>
+          <div class="app-main">
+            <div class="app-topbar"><h2>Catalogue produits</h2><button class="btn btn-gold btn-sm">+ Ajouter un produit</button></div>
+            <div class="cat-toolbar">
+              <div class="cat-filters">
+                <span class="filter-chip active">Tous (48)</span>
+                <span class="filter-chip">Pagnes &amp; Wax (18)</span>
+                <span class="filter-chip">Robes (12)</span>
+                <span class="filter-chip">Accessoires (18)</span>
+              </div>
+              <div class="search" style="width:200px;">🔍 Rechercher un produit…</div>
+            </div>
+            <div class="prod-grid">
+              <div class="card prod-card"><div class="img"><span class="chip chip-error stockflag">Stock faible</span></div><div class="body"><div class="name">Pagne Ankara Bleu Royal</div><div class="price">22 000 F</div><div class="stats"><span>3 en stock</span><span>👁 214</span></div></div></div>
+              <div class="card prod-card"><div class="img"></div><div class="body"><div class="name">Robe Wax Reine</div><div class="price">18 000 F</div><div class="stats"><span>8 en stock</span><span>👁 189</span></div></div></div>
+              <div class="card prod-card"><div class="img"><span class="chip chip-success stockflag">Populaire</span></div><div class="body"><div class="name">Sac tissé Bogolan</div><div class="price">9 500 F</div><div class="stats"><span>32 en stock</span><span>👁 302</span></div></div></div>
+              <div class="card prod-card"><div class="img"></div><div class="body"><div class="name">Ensemble enfant Wax</div><div class="price">7 000 F</div><div class="stats"><span>15 en stock</span><span>👁 76</span></div></div></div>
+              <div class="card prod-card"><div class="img"></div><div class="body"><div class="name">Boubou homme brodé</div><div class="price">27 500 F</div><div class="stats"><span>6 en stock</span><span>👁 98</span></div></div></div>
+              <div class="card prod-card"><div class="img"><span class="chip chip-error stockflag">Rupture</span></div><div class="body"><div class="name">Foulard assorti</div><div class="price">3 000 F</div><div class="stats"><span>0 en stock</span><span>👁 54</span></div></div></div>
+              <div class="card prod-card"><div class="img"></div><div class="body"><div class="name">Sandales artisanales</div><div class="price">6 500 F</div><div class="stats"><span>19 en stock</span><span>👁 41</span></div></div></div>
+              <div class="card prod-card"><div class="img"></div><div class="body"><div class="name">Bijoux perles Bogolan</div><div class="price">4 200 F</div><div class="stats"><span>27 en stock</span><span>👁 63</span></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 7 : CENTRE IA -->
+    <section class="screen" id="s7">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 10 · Intelligence</div>
+        <h1>Centre IA — Agents</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> propriétaire, administrateur</span><span><b>Objectif :</b> superviser l'activité et l'apprentissage des agents IA</span></div>
+      </div>
+      <div class="frame-browser">
+        <div class="chrome"><div class="dots"><span></span><span></span><span></span></div><div class="urlbar">app.sanou.ai/centre-ia</div></div>
+        <div class="app-shell">
+          <aside class="app-side">
+            <div class="brand"><div class="mark"></div>SANOU AI</div>
+            <div class="app-nav"><a>📊 Tableau de bord</a><a>💬 Conversations</a><div class="app-nav-sec">Intelligence</div><a class="active">🤖 Centre IA</a><a>📣 IA Marketing</a><a>📈 Analytics</a></div>
+          </aside>
+          <div class="app-main">
+            <div class="app-topbar"><h2>Centre IA</h2><span class="chip chip-success">● 6 agents actifs</span></div>
+            <div class="agents-grid">
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#FEF1DD;">🧠</div><span class="chip chip-success">Actif</span></div>
+                <h4>Agent Compréhension client</h4><div class="desc">Analyse le langage, l'intention et les besoins exprimés dans chaque message.</div>
+                <div class="agent-stat"><span>Messages analysés (24h)</span><b>1 204</b></div>
+                <div class="agent-stat"><span>Précision estimée</span><b>96%</b></div>
+                <div class="agent-log">10:04 · Intention détectée : achat mariage<br>10:11 · Budget estimé : 25 000 F</div>
+              </div>
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#E4F7EA;">🛍️</div><span class="chip chip-success">Actif</span></div>
+                <h4>Agent Vendeur</h4><div class="desc">Formule les réponses commerciales, gère les objections, conclut la vente.</div>
+                <div class="agent-stat"><span>Ventes conclues (7j)</span><b>63</b></div>
+                <div class="agent-stat"><span>Taux de conversion</span><b>24,6%</b></div>
+                <div class="agent-log">10:04 · Proposition envoyée à Aïcha B.<br>10:06 · Objection prix gérée — remise proposée</div>
+              </div>
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#E7EEFB;">🎯</div><span class="chip chip-success">Actif</span></div>
+                <h4>Agent Recommandation</h4><div class="desc">Suggère les produits complémentaires ou alternatifs les plus pertinents.</div>
+                <div class="agent-stat"><span>Recommandations servies</span><b>842</b></div>
+                <div class="agent-stat"><span>Taux de clic</span><b>38%</b></div>
+                <div class="agent-log">09:58 · Alternative suggérée pour rupture de stock</div>
+              </div>
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#FBE7E7;">👁️</div><span class="chip chip-success">Actif</span></div>
+                <h4>Agent Vision</h4><div class="desc">Identifie les produits à partir des photos envoyées par les clients.</div>
+                <div class="agent-stat"><span>Photos traitées (24h)</span><b>57</b></div>
+                <div class="agent-stat"><span>Taux d'identification</span><b>91%</b></div>
+                <div class="agent-log">10:04 · Photo reçue — modèle identifié : Ankara Bleu</div>
+              </div>
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#FEF1DD;">🎙️</div><span class="chip chip-success">Actif</span></div>
+                <h4>Agent Vocal</h4><div class="desc">Comprend et répond aux notes vocales, y compris en fon.</div>
+                <div class="agent-stat"><span>Notes vocales traitées</span><b>129</b></div>
+                <div class="agent-stat"><span>Langues détectées</span><b>Fon, Français</b></div>
+                <div class="agent-log">09:40 · Note vocale en fon transcrite et traitée</div>
+              </div>
+              <div class="card agent-card">
+                <div class="head"><div class="glyph" style="background:#E4F7EA;">📣</div><span class="chip chip-warn">En apprentissage</span></div>
+                <h4>Agent Marketing</h4><div class="desc">Génère publications, publicités et messages promotionnels.</div>
+                <div class="agent-stat"><span>Contenus générés (7j)</span><b>14</b></div>
+                <div class="agent-stat"><span>Taux d'approbation</span><b>79%</b></div>
+                <div class="agent-log">Hier · 3 publications proposées pour validation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 8 : MOBILE VENDEUR -->
+    <section class="screen" id="s8">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15 · Mobile</div>
+        <h1>Application mobile vendeur</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur, responsable commercial</span><span><b>Objectif :</b> répondre vite, suivre ses ventes en mobilité</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-brand" style="background:var(--night);padding:14px 18px 6px;"><div class="mark"></div><span>SANOU AI</span></div>
+          <div class="mob-top">
+            <div class="greet">Bonjour</div>
+            <h3>Rafiatou 👋</h3>
+          </div>
+          <div class="mob-kpis">
+            <div class="mob-kpi"><div class="v">47</div><div class="l">Conversations</div></div>
+            <div class="mob-kpi"><div class="v">24,6%</div><div class="l">Conversion</div></div>
+            <div class="mob-kpi"><div class="v">1,28M</div><div class="l">Ventes F CFA</div></div>
+          </div>
+          <div class="mob-sec-h"><h4>À reprendre</h4><span>Voir tout</span></div>
+          <div class="mob-conv"><div class="avatar" style="background:var(--clay);width:38px;height:38px;">AB</div><div class="info"><b>Aïcha B.</b><span>Vous avez des pagnes wax pour un mariage ?</span></div><span class="chip chip-warn">82</span></div>
+          <div class="mob-conv"><div class="avatar" style="background:var(--teal);width:38px;height:38px;">MK</div><div class="info"><b>Moussa K.</b><span>D'accord, je réfléchis encore un peu</span></div><span class="chip chip-info">41</span></div>
+          <div class="mob-sec-h"><h4>Suggestion IA du jour</h4></div>
+          <div style="margin:0 18px;background:#221F5C;border-radius:12px;padding:14px;color:#fff;display:flex;gap:10px;">
+            <div class="pulse" style="margin-top:4px;"></div>
+            <div style="font-size:12px;line-height:1.5;color:#DCD9F5;">3 clientes n'ont pas été relancées depuis 2 jours pour le pagne Ankara Bleu.</div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t active"><div class="ic"></div>Accueil</div>
+            <div class="t"><div class="ic"></div>Chats</div>
+            <div class="t"><div class="ic"></div>Clients</div>
+            <div class="t"><div class="ic"></div>Ventes</div>
+            <div class="t"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 9 : MOBILE — CONVERSATIONS -->
+    <section class="screen" id="s9">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15b · Mobile</div>
+        <h1>App vendeur — Conversations</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur</span><span><b>Objectif :</b> voir toutes les conversations en cours, filtrer par priorité</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-head">
+            <div class="mob-brand"><div class="mark"></div><span>SANOU AI</span></div>
+            <h3>Conversations</h3>
+            <div class="search">🔍 Rechercher une conversation…</div>
+            <div class="tabs"><span class="active">Toutes (47)</span><span>À reprendre (5)</span><span>Score élevé (12)</span></div>
+          </div>
+          <div class="mob-body">
+            <div class="mob-conv2"><div class="avatar" style="background:var(--clay);">AB</div><div class="info"><div class="top">Aïcha B. <span>2 min</span></div><div class="prev">Vous avez des pagnes wax pour un mariage ?</div></div><span class="score-badge" style="background:#FDF1DD;color:var(--gold-deep);">82</span></div>
+            <div class="mob-conv2"><div class="avatar" style="background:var(--teal);">MK</div><div class="info"><div class="top">Moussa K. <span>14 min</span></div><div class="prev">D'accord, je réfléchis encore un peu</div></div><span class="score-badge" style="background:#E7EEFB;color:var(--night-3);">41</span></div>
+            <div class="mob-conv2"><div class="avatar" style="background:var(--success);">FD</div><div class="info"><div class="top">Fatima D. <span>1 h</span></div><div class="prev">🎤 Note vocale (0:14)</div></div><span class="score-badge" style="background:#E4F7EA;color:var(--success);">91</span></div>
+            <div class="mob-conv2"><div class="avatar" style="background:#8A7FD1;">SO</div><div class="info"><div class="top">Serge O. <span>3 h</span></div><div class="prev">📷 a envoyé une photo</div></div><span class="score-badge" style="background:#E7EEFB;color:var(--night-3);">55</span></div>
+            <div class="mob-conv2"><div class="avatar" style="background:#B0774E;">YC</div><div class="info"><div class="top">Yvette C. <span>Hier</span></div><div class="prev">Merci beaucoup, à bientôt !</div></div><span class="score-badge" style="background:var(--paper-2);color:var(--ink-soft);">28</span></div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t"><div class="ic"></div>Accueil</div>
+            <div class="t active"><div class="ic"></div>Chats</div>
+            <div class="t"><div class="ic"></div>Clients</div>
+            <div class="t"><div class="ic"></div>Ventes</div>
+            <div class="t"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 10 : MOBILE — FIL DE DISCUSSION -->
+    <section class="screen" id="s10">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15c · Mobile</div>
+        <h1>App vendeur — Fil de discussion</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur</span><span><b>Quand :</b> après avoir ouvert une conversation depuis la liste</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-chat-h">
+            <span class="back">←</span>
+            <div class="avatar" style="background:var(--clay);width:34px;height:34px;">AB</div>
+            <div><b>Aïcha B.</b><span>WhatsApp · IA seule</span></div>
+          </div>
+          <div class="mob-msgs">
+            <div class="mob-msg-row"><div class="mob-msg client">Bonjour, vous avez des pagnes wax pour un mariage ? Budget max 25 000 F</div></div>
+            <div class="mob-msg-row me"><div class="mob-msg ai">Bonjour Aïcha 👋 Oui ! J'ai 3 modèles sous 25 000 F, dont un très demandé pour les mariages.</div></div>
+            <div class="mob-msg-row"><div class="mob-msg client">📷 [photo envoyée]</div></div>
+            <div class="mob-msg-row me"><div class="mob-msg ai">Merci pour la photo ! Ce modèle est en stock à 22 000 F. Je vous le réserve ?</div></div>
+          </div>
+          <div class="mob-suggest">
+            <div class="lbl">Suggestions IA</div>
+            <span class="suggest-chip">Proposer livraison gratuite</span>
+            <span class="suggest-chip">Reprendre la main</span>
+          </div>
+          <div class="mob-input-bar"><div class="field">Écrire un message…</div><div class="send">➤</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 11 : MOBILE — CLIENTS -->
+    <section class="screen" id="s11">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15d · Mobile</div>
+        <h1>App vendeur — Clients</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur</span><span><b>Objectif :</b> retrouver rapidement un client et son niveau d'intérêt</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-head">
+            <div class="mob-brand"><div class="mark"></div><span>SANOU AI</span></div>
+            <h3>Clients</h3>
+            <div class="search">🔍 Rechercher un client…</div>
+            <div class="tabs"><span class="active">Tous (312)</span><span>Intérêt élevé (48)</span><span>VIP (9)</span></div>
+          </div>
+          <div class="mob-body">
+            <div class="mob-client-row"><div class="avatar" style="background:var(--clay);">AB</div><div class="info"><b>Aïcha Boukari</b><span>Dernier contact : aujourd'hui</span><div class="meter-mini"><i style="width:82%;"></i></div></div></div>
+            <div class="mob-client-row"><div class="avatar" style="background:var(--teal);">MK</div><div class="info"><b>Moussa Kora</b><span>Dernier contact : il y a 14 min</span><div class="meter-mini"><i style="width:41%;background:var(--gold);"></i></div></div></div>
+            <div class="mob-client-row"><div class="avatar" style="background:var(--success);">FD</div><div class="info"><b>Fatima Dossou</b><span>Cliente VIP · 6 achats</span><div class="meter-mini"><i style="width:91%;"></i></div></div></div>
+            <div class="mob-client-row"><div class="avatar" style="background:#8A7FD1;">SO</div><div class="info"><b>Serge Odjo</b><span>Dernier contact : il y a 3 h</span><div class="meter-mini"><i style="width:55%;background:var(--gold);"></i></div></div></div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t"><div class="ic"></div>Accueil</div>
+            <div class="t"><div class="ic"></div>Chats</div>
+            <div class="t active"><div class="ic"></div>Clients</div>
+            <div class="t"><div class="ic"></div>Ventes</div>
+            <div class="t"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 12 : MOBILE — VENTES -->
+    <section class="screen" id="s12">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15e · Mobile</div>
+        <h1>App vendeur — Ventes</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur, propriétaire</span><span><b>Objectif :</b> suivre les ventes générées, en mobilité</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-sales-hero">
+            <div class="mob-brand"><div class="mark"></div><span>SANOU AI</span></div>
+            <div class="lbl">Ventes générées cette semaine</div>
+            <div class="val">1 284 500 F</div>
+            <div class="delta">▲ 18% vs semaine dernière</div>
+          </div>
+          <div class="mob-sec-h"><h4>Ventes récentes</h4><span>Voir tout</span></div>
+          <div class="mob-body">
+            <div class="mob-sale-row"><div><div class="p">Robe Wax Reine</div><div class="d">Aïcha B. · aujourd'hui, 10:12</div></div><div class="amt">18 000 F</div></div>
+            <div class="mob-sale-row"><div><div class="p">Sac tissé Bogolan</div><div class="d">Fatima D. · hier, 16:40</div></div><div class="amt">9 500 F</div></div>
+            <div class="mob-sale-row"><div><div class="p">Boubou homme brodé</div><div class="d">Serge O. · hier, 11:05</div></div><div class="amt">27 500 F</div></div>
+            <div class="mob-sale-row"><div><div class="p">Ensemble enfant Wax</div><div class="d">Yvette C. · 2 jours</div></div><div class="amt">7 000 F</div></div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t"><div class="ic"></div>Accueil</div>
+            <div class="t"><div class="ic"></div>Chats</div>
+            <div class="t"><div class="ic"></div>Clients</div>
+            <div class="t active"><div class="ic"></div>Ventes</div>
+            <div class="t"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 13 : MOBILE — NOTIFICATIONS -->
+    <section class="screen" id="s13">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15f · Mobile</div>
+        <h1>App vendeur — Notifications</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> vendeur, propriétaire</span><span><b>Quand :</b> alertes stock, ventes, relances suggérées par l'IA</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-head">
+            <div class="mob-brand"><div class="mark"></div><span>SANOU AI</span></div>
+            <h3>Notifications</h3>
+          </div>
+          <div class="mob-body">
+            <div class="mob-notif unread"><div class="ico" style="background:#FEF1DD;">💡</div><div class="body"><b>Suggestion IA</b><span>3 clientes n'ont pas été relancées pour le pagne Ankara Bleu.</span></div><span class="time">2 min</span></div>
+            <div class="mob-notif unread"><div class="ico" style="background:#E4F7EA;">🛍️</div><div class="body"><b>Nouvelle vente</b><span>Robe Wax Reine vendue à Aïcha B. — 18 000 F</span></div><span class="time">32 min</span></div>
+            <div class="mob-notif"><div class="ico" style="background:#FBE7E7;">📦</div><div class="body"><b>Stock faible</b><span>Il ne reste que 3 unités de "Pagne Ankara Bleu Royal".</span></div><span class="time">1 h</span></div>
+            <div class="mob-notif"><div class="ico" style="background:#E7EEFB;">🔁</div><div class="body"><b>Transfert demandé</b><span>L'IA a transféré la conversation avec Moussa K. — objection prix complexe.</span></div><span class="time">3 h</span></div>
+            <div class="mob-notif"><div class="ico" style="background:#FEF1DD;">🎙️</div><div class="body"><b>Note vocale traitée</b><span>Fatima D. a envoyé une note vocale en fon, traitée automatiquement.</span></div><span class="time">Hier</span></div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t active"><div class="ic"></div>Accueil</div>
+            <div class="t"><div class="ic"></div>Chats</div>
+            <div class="t"><div class="ic"></div>Clients</div>
+            <div class="t"><div class="ic"></div>Ventes</div>
+            <div class="t"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 14 : MOBILE — MENU "PLUS" -->
+    <section class="screen" id="s14">
+      <div class="stage-header">
+        <div class="eyebrow">Écran 15g · Mobile</div>
+        <h1>App vendeur — Menu "Plus"</h1>
+        <div class="stage-meta"><span><b>Utilisateur :</b> tous les profils</span><span><b>Objectif :</b> retrouver sur mobile les mêmes sections que la sidebar web (parité de navigation)</span></div>
+      </div>
+      <div class="frame-phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="mob-head" style="padding-bottom:16px;">
+            <div class="mob-brand"><div class="mark"></div><span>SANOU AI</span></div>
+            <h3>Menu</h3>
+          </div>
+          <div class="mob-body">
+            <div class="mob-menu-profile">
+              <div class="avatar" style="background:var(--night-3);">RB</div>
+              <div><b>Rafiatou B.</b><span>Wax Elegance · Plan Croissance</span></div>
+            </div>
+            <div class="mob-menu-sec">Commerce</div>
+            <div class="mob-menu-row"><div class="ico">🛍️</div>Catalogue produits<span class="chev">›</span></div>
+            <div class="mob-menu-row"><div class="ico">📦</div>Gestion du stock<span class="chev">›</span></div>
+            <div class="mob-menu-sec">Intelligence</div>
+            <div class="mob-menu-row"><div class="ico">🤖</div>Centre IA — Agents<span class="chev">›</span></div>
+            <div class="mob-menu-row"><div class="ico">📣</div>IA Marketing<span class="chev">›</span></div>
+            <div class="mob-menu-row"><div class="ico">📈</div>Analytics commerciaux<span class="chev">›</span></div>
+            <div class="mob-menu-sec">Compte</div>
+            <div class="mob-menu-row"><div class="ico">⚙️</div>Paramètres entreprise<span class="chev">›</span></div>
+            <div class="mob-menu-row"><div class="ico">🔌</div>Intégrations<span class="chev">›</span></div>
+            <div class="mob-menu-row"><div class="ico">🚪</div>Se déconnecter<span class="chev">›</span></div>
+          </div>
+          <div class="mob-tabbar">
+            <div class="t"><div class="ic"></div>Accueil</div>
+            <div class="t"><div class="ic"></div>Chats</div>
+            <div class="t"><div class="ic"></div>Clients</div>
+            <div class="t"><div class="ic"></div>Ventes</div>
+            <div class="t active"><div class="ic"></div>Plus</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.rail-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.rail-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    const target = item.getAttribute('data-screen');
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+    document.querySelector('.stage').scrollTo(0,0);
+  });
+});
+</script>
+</body>
+</html>
