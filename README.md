@@ -61,12 +61,12 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 
 | Tableau de bord (Dashboard) | Centre de Conversations IA |
 | :---: | :---: |
-| <img src="assets/screenshots/dashboard-desktop.png" alt="Dashboard SANOU AI" width="100%"/> | <img src="assets/screenshots/conversations-desktop.png" alt="Inbox IA SANOU AI" width="100%"/> |
+| <img src="dashboard-desktop.png" alt="Dashboard SANOU AI" width="100%"/> | <img src="assets/screenshots/conversations-desktop.png" alt="Inbox IA SANOU AI" width="100%"/> |
 | *Vue d'ensemble des ventes et recommandations IA* | *Messagerie unifiée avec copilote IA en temps réel* |
 
 | Catalogue Produit Intelligent | Centre de Contrôle des Agents IA |
 | :---: | :---: |
-| <img src="assets/screenshots/catalogue-desktop.png" alt="Catalogue SANOU AI" width="100%"/> | <img src="assets/screenshots/agents-center.png" alt="Agents IA SANOU AI" width="100%"/> |
+| <img src="catalogue-desktop.png" alt="Catalogue SANOU AI" width="100%"/> | <img src="assets/screenshots/agents-center.png" alt="Agents IA SANOU AI" width="100%"/> |
 | *Gestion des stocks et analyse des performances* | *Configuration et suivi des différents agents commerciaux* |
 
 ---
@@ -74,9 +74,9 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 ### 📱 App Mobile Vendeur
 
 <p align="center">
-  <img src="assets/screenshots/mobile-dashboard.png" alt="Mobile Dashboard" width="30%" />
+  <img src="mobile-dashboard.png" alt="Mobile Dashboard" width="30%" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/screenshots/mobile-chat.png" alt="Mobile Chat" width="30%" />
+  <img src="mobile-chat.png" alt="Mobile Chat" width="30%" />
 </p>
 
 <p align="center">
