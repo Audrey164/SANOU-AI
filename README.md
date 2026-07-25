@@ -59,13 +59,13 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 
 ### 🖥️ Interface Desktop
 
-| Tableau de bord (Dashboard) | Centre de Conversations IA |
-| :---: | :---: |
+| Tableau de bord (Dashboard) | 
+| :---: | 
 | <img src="dashboard-desktop.png" alt="Dashboard SANOU AI" width="100%"/> |
 | *Vue d'ensemble des ventes et recommandations IA* | 
 
-| Catalogue Produit Intelligent | Centre de Contrôle des Agents IA |
-| :---: | :---: |
+| Catalogue Produit Intelligent | 
+| :---: |
 | <img src="catalogue-desktop.png" alt="Catalogue SANOU AI" width="100%"/> | 
 | *Gestion des stocks et analyse des performances* | 
 
