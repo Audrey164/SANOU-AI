@@ -53,3 +53,32 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 │   ├── js/             # Logique d'interaction et simulation IA
 │   └── images/         # Logos et assets visuels
 └── README.md           # Documentation du projet
+## 📸 Aperçu de l'Interface
+
+
+
+### 🖥️ Interface Desktop
+
+| Tableau de bord (Dashboard) | Centre de Conversations IA |
+| :---: | :---: |
+| <img src="assets/screenshots/dashboard-desktop.png" alt="Dashboard SANOU AI" width="100%"/> | <img src="assets/screenshots/conversations-desktop.png" alt="Inbox IA SANOU AI" width="100%"/> |
+| *Vue d'ensemble des ventes et recommandations IA* | *Messagerie unifiée avec copilote IA en temps réel* |
+
+| Catalogue Produit Intelligent | Centre de Contrôle des Agents IA |
+| :---: | :---: |
+| <img src="assets/screenshots/catalogue-desktop.png" alt="Catalogue SANOU AI" width="100%"/> | <img src="assets/screenshots/agents-center.png" alt="Agents IA SANOU AI" width="100%"/> |
+| *Gestion des stocks et analyse des performances* | *Configuration et suivi des différents agents commerciaux* |
+
+---
+
+### 📱 App Mobile Vendeur
+
+<p align="center">
+  <img src="assets/screenshots/mobile-dashboard.png" alt="Mobile Dashboard" width="30%" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/mobile-chat.png" alt="Mobile Chat" width="30%" />
+</p>
+
+<p align="center">
+  <sub><i>Interface mobile optimisée pour les vendeurs sur le terrain et la réactivité WhatsApp.</i></sub>
+</p>
