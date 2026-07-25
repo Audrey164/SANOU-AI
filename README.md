@@ -8,7 +8,7 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 
 ## 🎯 Démo en ligne
 
-👉 **Consulter la démo interactive :** [[https://votre-projet.vercel.app](https://lambent-llama-83ba98.netlify.app/)]
+👉 **Consulter la démo interactive :** [[https://lambent-llama-83ba98.netlify.app/](https://lambent-llama-83ba98.netlify.app/)]
 
 ---
 
