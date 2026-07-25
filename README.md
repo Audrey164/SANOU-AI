@@ -46,7 +46,7 @@ SANOU AI est un employé commercial virtuel propulsé par l'IA, conçu pour aide
 
 ## 📂 Structure du Projet
 
-```text
+
 ├── index.html          # Application principale (SPA)
 ├── assets/
 │   ├── css/            # Styles et configuration Tailwind
